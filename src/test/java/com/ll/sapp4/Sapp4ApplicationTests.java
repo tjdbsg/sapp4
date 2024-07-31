@@ -2,6 +2,7 @@ package com.ll.sapp4;
 
 import com.ll.sapp4.answer.Answer;
 import com.ll.sapp4.answer.AnswerRepository;
+import com.ll.sapp4.answer.AnswerService;
 import com.ll.sapp4.question.Question;
 import com.ll.sapp4.question.QuestionRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.ll.sapp4.question.QuestionService;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +21,15 @@ class Sapp4ApplicationTests {
 
 	@Autowired
 	private QuestionRepository questionRepository;
+	private QuestionService questionService;
 
 	@Autowired
 	private AnswerRepository answerRepository;
 
 	@Test
 	@Transactional
-	// 테스트 환경에서는 트랜젹션이 달린 테스트케이스는 기본적으로 자동콜백 됨
-	// @Transactional(false) 이렇게 하면 트랜잭션 선공 후 자동콜백이 되지 않음
+		// 테스트 환경에서는 트랜젹션이 달린 테스트케이스는 기본적으로 자동콜백 됨
+		// @Transactional(false) 이렇게 하면 트랜잭션 선공 후 자동콜백이 되지 않음
 
 	void testJpa() {
 
@@ -104,13 +107,21 @@ class Sapp4ApplicationTests {
 //		assertEquals(2, a.getQuestion().getId());
 
 		// 11th
-		Optional<Question> oq = this.questionRepository.findById(2);
-		assertTrue(oq.isPresent());
-		Question q = oq.get();
+//		Optional<Question> oq = this.questionRepository.findById(2);
+//		assertTrue(oq.isPresent());
+//		Question q = oq.get();
+//
+//		List<Answer> answerList = q.getAnswerList();
+//
+//		assertEquals(1, answerList.size());
+//		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 
-		List<Answer> answerList = q.getAnswerList();
 
-		assertEquals(1, answerList.size());
-		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+		// 페이징 기능
+		for (int i = 1; i <= 300; i++) {
+			String subject = String.format("테스트 데이터입니다:[%03d]", i);
+			String content = "내용무";
+			this.questionService.create(subject, content);
+		}
 	}
 }
